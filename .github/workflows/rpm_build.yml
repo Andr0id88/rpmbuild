@@ -19,24 +19,22 @@ jobs:
         bash -c "
           dnf install -y rpm-build mock tar gzip && \
           mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} && \
-          mkdir -p /workspace/rpmbuild/RPMS && \
+          mkdir -p /workspace/rpmbuild && \
           mkdir /workspace/mypackage-1.0 && \
           cp -r /workspace/src /workspace/mypackage-1.0/ && \
           tar czf /root/rpmbuild/SOURCES/mypackage-1.0.tar.gz -C /workspace mypackage-1.0 && \
           rpmbuild -ba /workspace/mypackage.spec && \
-          echo 'Listing /root/rpmbuild/RPMS/:' && \
-          ls -R /root/rpmbuild/RPMS/ && \
           echo 'Copying RPMs to workspace...' && \
-          cp -r /root/rpmbuild/RPMS/ /workspace/rpmbuild/RPMS/ && \
-          echo 'Listing /workspace/rpmbuild/RPMS/:' && \
-          ls -R /workspace/rpmbuild/RPMS/
+          cp -r /root/rpmbuild/RPMS/noarch /workspace/rpmbuild/ && \
+          echo 'Listing /workspace/rpmbuild/noarch/:' && \
+          ls -R /workspace/rpmbuild/noarch/
         "
 
     - name: Upload built RPMs
       uses: actions/upload-artifact@v3
       with:
         name: RPMs
-        path: /workspace/rpmbuild/RPMS/**/*.rpm
+        path: /workspace/rpmbuild/noarch/**/*.rpm
 
     - name: Create Release
       id: create_release
@@ -55,7 +53,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /workspace/rpmbuild/RPMS/**/*.rpm
+        asset_path: /workspace/rpmbuild/noarch/mypackage-1.0-1.fc40.noarch.rpm
         asset_name: mypackage-1.0-1.noarch.rpm
         asset_content_type: application/octet-stream
 
