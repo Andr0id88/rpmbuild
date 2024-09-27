@@ -13,8 +13,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Build RPM inside CentOS container
-      uses: docker://fedora:latest  # You can also use "centos:7" or "centos:8" depending on your preference
+    - name: Set up Fedora container
+      uses: docker://fedora:latest  # Alternatively, "centos:7" or "centos:8" can be used
+
+    - name: Install RPM tools and build the RPM
       run: |
         dnf install -y rpm-build mock tar gzip
         mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
