@@ -27,8 +27,6 @@ jobs:
           cp -r /workspace/src /workspace/mypackage-1.0/ && \
           tar czf /root/rpmbuild/SOURCES/mypackage-1.0.tar.gz -C /workspace mypackage-1.0 && \
           rpmbuild -ba /workspace/mypackage.spec && \
-          echo 'RPM Build Completed. Listing all files in /root/rpmbuild/RPMS/noarch:' && \
-          ls -l /root/rpmbuild/RPMS/noarch/ && \
           echo 'Copying RPM to workspace directory...' && \
           cp /root/rpmbuild/RPMS/noarch/*.rpm /workspace/rpmbuild/ && \
           echo 'Listing /workspace/rpmbuild directory:' && \
@@ -39,5 +37,5 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: RPMs
-        path: /workspace/rpmbuild/*.rpm
+        path: /workspace/rpmbuild/mypackage-1.0-1.fc40.noarch.rpm
 
