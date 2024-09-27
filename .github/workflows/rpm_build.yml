@@ -22,20 +22,22 @@ jobs:
         bash -c "
           dnf install -y rpm-build mock tar gzip && \
           mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} && \
-          mkdir -p /workspace/rpmbuild/noarch && \
+          mkdir -p /workspace/rpmbuild && \
           mkdir /workspace/mypackage-1.0 && \
           cp -r /workspace/src /workspace/mypackage-1.0/ && \
           tar czf /root/rpmbuild/SOURCES/mypackage-1.0.tar.gz -C /workspace mypackage-1.0 && \
           rpmbuild -ba /workspace/mypackage.spec && \
-          echo 'Copying RPM to workspace...' && \
-          cp /root/rpmbuild/RPMS/noarch/*.rpm /workspace/rpmbuild/noarch/ && \
-          echo 'Listing /workspace/rpmbuild/noarch/:' && \
-          ls -R /workspace/rpmbuild/noarch/
+          echo 'RPM Build Completed. Listing all files in /root/rpmbuild/RPMS/noarch:' && \
+          ls -l /root/rpmbuild/RPMS/noarch/ && \
+          echo 'Copying RPM to workspace directory...' && \
+          cp /root/rpmbuild/RPMS/noarch/*.rpm /workspace/rpmbuild/ && \
+          echo 'Listing /workspace/rpmbuild directory:' && \
+          ls -l /workspace/rpmbuild/
         "
 
     - name: Upload built RPMs as artifacts
       uses: actions/upload-artifact@v3
       with:
         name: RPMs
-        path: /workspace/rpmbuild/noarch/**/*.rpm
+        path: /workspace/rpmbuild/*.rpm
 
