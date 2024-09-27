@@ -22,13 +22,13 @@ jobs:
         bash -c "
           dnf install -y rpm-build mock tar gzip && \
           mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} && \
-          mkdir -p /workspace/rpmbuild && \
+          mkdir -p /workspace/rpmbuild/noarch && \
           mkdir /workspace/mypackage-1.0 && \
           cp -r /workspace/src /workspace/mypackage-1.0/ && \
           tar czf /root/rpmbuild/SOURCES/mypackage-1.0.tar.gz -C /workspace mypackage-1.0 && \
           rpmbuild -ba /workspace/mypackage.spec && \
-          echo 'Copying RPMs to workspace...' && \
-          cp -r /root/rpmbuild/RPMS/noarch /workspace/rpmbuild/ && \
+          echo 'Copying RPM to workspace...' && \
+          cp /root/rpmbuild/RPMS/noarch/*.rpm /workspace/rpmbuild/noarch/ && \
           echo 'Listing /workspace/rpmbuild/noarch/:' && \
           ls -R /workspace/rpmbuild/noarch/
         "
