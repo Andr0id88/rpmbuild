@@ -7,27 +7,27 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Still uses Ubuntu runner, but we'll use a CentOS/Fedora container
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Fedora container
-      uses: docker://fedora:latest  # Alternatively, "centos:7" or "centos:8" can be used
-
-    - name: Install RPM tools and build the RPM
+    - name: Build RPM in Fedora container
       run: |
-        dnf install -y rpm-build mock tar gzip
-        mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-        cd /root/rpmbuild/SOURCES
-        tar czf mypackage-1.0.tar.gz /github/workspace/src/
-        cd /github/workspace
-        rpmbuild -ba mypackage.spec
+        docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace fedora:latest \
+        bash -c "
+          dnf install -y rpm-build mock tar gzip && \
+          mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS} && \
+          cd /root/rpmbuild/SOURCES && \
+          tar czf mypackage-1.0.tar.gz /workspace/src && \
+          cd /workspace && \
+          rpmbuild -ba mypackage.spec
+        "
 
     - name: Upload built RPMs
       uses: actions/upload-artifact@v3
       with:
         name: RPMs
-        path: /root/rpmbuild/RPMS/
+        path: /workspace/rpmbuild/RPMS/
 
