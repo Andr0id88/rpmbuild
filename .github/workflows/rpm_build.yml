@@ -24,7 +24,7 @@ jobs:
         rpmbuild -ba mypackage.spec
 
     - name: Upload built RPMs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: RPMs
         path: ~/rpmbuild/RPMS/
