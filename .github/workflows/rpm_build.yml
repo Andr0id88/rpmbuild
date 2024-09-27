@@ -24,7 +24,12 @@ jobs:
           cp -r /workspace/src /workspace/mypackage-1.0/ && \
           tar czf /root/rpmbuild/SOURCES/mypackage-1.0.tar.gz -C /workspace mypackage-1.0 && \
           rpmbuild -ba /workspace/mypackage.spec && \
-          cp -r /root/rpmbuild/RPMS/ /workspace/rpmbuild/RPMS/
+          echo 'Listing /root/rpmbuild/RPMS/:' && \
+          ls -R /root/rpmbuild/RPMS/ && \
+          echo 'Copying RPMs to workspace...' && \
+          cp -r /root/rpmbuild/RPMS/ /workspace/rpmbuild/RPMS/ && \
+          echo 'Listing /workspace/rpmbuild/RPMS/:' && \
+          ls -R /workspace/rpmbuild/RPMS/
         "
 
     - name: Upload built RPMs
